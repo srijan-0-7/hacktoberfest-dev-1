@@ -23,10 +23,13 @@ Whether exploring a local trail, walking through a neighborhood park, or examini
 
 ## Demo
 
-- 🌐 **Live Application:** [https://fieldlens-dev.vercel.app](https://fieldlens-dev.vercel.app) *(Replace with your deployed Vercel URL)*
-- 💻 **Local Development:** Runs out-of-the-box via `npm run dev` at `http://localhost:3000`.
+Watch FieldLens in action analyzing specimens and saving observations in real time:
 
-### Preview & User Journey
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YIhn4hLXFb0?si=0_rFT6y7QsZZdGr9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+**Direct Video Link:** [https://youtu.be/YIhn4hLXFb0?si=0_rFT6y7QsZZdGr9](https://youtu.be/YIhn4hLXFb0?si=0_rFT6y7QsZZdGr9)
+
+### Walkthrough & User Journey
 1. **Landing & Ethics:** Introduces *Leave No Trace* outdoor ethics and transparency disclosures.
 2. **Capture & Analyze:** Select or photograph a specimen; Google Gemma Vision evaluates leaf structure, plumage, or growth habit in real time.
 3. **Structured Card:** Renders common name, scientific name (if warranted), uncertainty rating, visual evidence, outdoor tips, and cautions.

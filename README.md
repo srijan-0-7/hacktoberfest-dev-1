@@ -8,6 +8,16 @@ Unlike generic image classifiers or ungrounded chatbot wrappers, FieldLens is de
 
 ---
 
+## 📺 Video Demo
+
+Watch FieldLens in action identifying specimens and saving observations:
+
+[![FieldLens Video Demo](https://img.youtube.com/vi/YIhn4hLXFb0/0.jpg)](https://youtu.be/YIhn4hLXFb0?si=0_rFT6y7QsZZdGr9)
+
+👉 **[Watch on YouTube](https://youtu.be/YIhn4hLXFb0?si=0_rFT6y7QsZZdGr9)**
+
+---
+
 ## 🍃 Connection to “Touch Grass”
 
 The theme of Hacktoberfest Week 1 is **“Touch Grass”**: leveraging open-source AI to encourage people to disconnect from repetitive digital routines and engage directly with the physical, living world.
