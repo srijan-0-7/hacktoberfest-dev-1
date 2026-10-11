@@ -143,16 +143,30 @@ npm run build
 
 ---
 
-## 🚢 Deployment to Vercel
+## 🚢 Deploying Directly to Vercel
 
-FieldLens is pre-configured with `vercel.json` for seamless zero-config deployment to Vercel:
+FieldLens is pre-configured with `vercel.json` and a serverless API handler (`api/identify.ts`) for zero-config deployment:
 
-1. Push your repository to GitHub.
-2. In your [Vercel Dashboard](https://vercel.com/new), import the repository `srijan-0-7/hacktoberfest-dev-1`.
-3. In **Project Settings** → **Environment Variables**, add:
-   - `GEMINI_API_KEY`: your Google API key.
-   - `GEMMA_MODEL`: `models/gemma-4-26b-a4b-it`
-4. Click **Deploy**. Vercel will build the frontend into `dist/` and expose `api/identify.ts` as a serverless function at `/api/identify`.
+### Quick Deployment Steps
+1. Push your repository to GitHub:
+   ```bash
+   git push origin main
+   ```
+2. Go to your [Vercel Dashboard](https://vercel.com/new) and click **Add New Project**.
+3. Select and import **`srijan-0-7/hacktoberfest-dev-1`**.
+4. Vercel will automatically detect the **Vite** framework preset.
+5. In **Environment Variables**, configure:
+   - **`GEMINI_API_KEY`**: Your Google Gemini / AI Studio API key *(Required)*
+   - **`GEMMA_MODEL`**: `models/gemma-4-26b-a4b-it` *(Optional, defaults to this model automatically)*
+6. Click **Deploy**.
+
+Vercel compiles the React frontend into `dist/` and runs `api/identify.ts` as a Node serverless function at `/api/identify`.
+
+> [!IMPORTANT]
+> **Security & Privacy Guarantee:**
+> - Local `.env` files are strictly gitignored and will never be pushed to your repository.
+> - The API key is stored only in Vercel's server-side environment variables and is **never** sent to the browser or exposed to client-side code.
+> - Uploaded photographs are processed in-memory and never saved to any database or file system.
 
 ---
 

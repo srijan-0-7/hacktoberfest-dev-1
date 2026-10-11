@@ -151,7 +151,12 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const body = req.body || {};
+  let body = req.body || {};
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch {}
+  }
   const result = await handleIdentifyRequest(body);
   res.status(result.status).json(result.body);
 }
