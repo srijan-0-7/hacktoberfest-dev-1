@@ -41,30 +41,58 @@ export async function handleIdentifyRequest(body: IdentifyRequestBody) {
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`;
 
   try {
-    const apiRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: FIELDLENS_SYSTEM_PROMPT },
+    // Helper to fetch with automatic retry on transient socket/network dropouts
+    let apiRes: Response | null = null;
+    let lastNetworkError: any = null;
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        apiRes = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
               {
-                inlineData: {
-                  mimeType,
-                  data: imageBase64,
-                },
+                parts: [
+                  { text: FIELDLENS_SYSTEM_PROMPT },
+                  {
+                    inlineData: {
+                      mimeType,
+                      data: imageBase64,
+                    },
+                  },
+                ],
               },
             ],
-          },
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
+            generationConfig: {
+              responseMimeType: 'application/json',
+            },
+          }),
+          signal: AbortSignal.timeout(60000), // 60s timeout for vision models
+        });
+        break;
+      } catch (netErr: any) {
+        lastNetworkError = netErr;
+        // Wait 1 second before retry if it was a connection reset or transient fetch failure
+        if (attempt < 2) {
+          await new Promise(r => setTimeout(r, 1200));
+        }
+      }
+    }
+
+    if (!apiRes) {
+      const cause = lastNetworkError?.cause?.message || lastNetworkError?.cause?.code || lastNetworkError?.message || '';
+      return {
+        status: 503,
+        body: {
+          success: false,
+          error: `Network connection to Google Gemma timed out or was interrupted${cause ? ` (${cause})` : ''}. Please click "Try Again".`,
+          model: modelName,
         },
-      }),
-    });
+      };
+    }
 
     const data = await apiRes.json();
 
@@ -116,7 +144,16 @@ export async function handleIdentifyRequest(body: IdentifyRequestBody) {
       },
     };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Unknown inference error occurred.';
+    let message = 'Unknown inference error occurred.';
+    if (err instanceof Error) {
+      if (err.name === 'TimeoutError' || err.message.includes('timeout')) {
+        message = 'The AI model took too long to analyze this image. Please click "Try Again".';
+      } else if (err.message.includes('fetch failed')) {
+        message = 'Connection to Google Gemma was interrupted. Please check your network and click "Try Again".';
+      } else {
+        message = err.message;
+      }
+    }
     return {
       status: 500,
       body: {

@@ -29,14 +29,15 @@ export default defineConfig({
             return;
           }
 
-          let bodyBuffer = '';
+          const chunks: any[] = [];
           req.on('data', chunk => {
-            bodyBuffer += chunk;
+            chunks.push(chunk);
           });
 
           req.on('end', async () => {
             try {
-              const body = bodyBuffer ? JSON.parse(bodyBuffer) : {};
+              const rawBody = Buffer.concat(chunks).toString('utf-8');
+              const body = rawBody ? JSON.parse(rawBody) : {};
               const result = await handleIdentifyRequest(body);
 
               res.writeHead(result.status, {
